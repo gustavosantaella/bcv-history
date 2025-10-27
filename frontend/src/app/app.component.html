@@ -4,16 +4,29 @@
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center">
         <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          <path
+            fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"
+          />
         </svg>
         <p class="text-sm font-medium">
-          <strong>Aviso Importante:</strong> Los datos mostrados pertenecen al <strong>Banco Central de Venezuela</strong>. 
-          Esta aplicación es únicamente y exclusivamente para la <strong>visualización de datos históricos</strong>.
+          <strong>Aviso Importante:</strong> Los datos mostrados pertenecen al
+          <strong>Banco Central de Venezuela</strong>. Esta aplicación es
+          únicamente y exclusivamente para la
+          <strong>visualización de datos históricos</strong>.
         </p>
       </div>
-      <button (click)="closeAlert()" class="ml-4 text-blue-100 hover:text-white transition-colors">
+      <button
+        (click)="closeAlert()"
+        class="ml-4 text-blue-100 hover:text-white transition-colors"
+      >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
         </svg>
       </button>
     </div>
@@ -23,7 +36,9 @@
     <!-- Header -->
     <header class="text-center mb-12">
       <div class="inline-block bg-white p-6 rounded-2xl shadow-lg mb-6">
-        <h1 class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3">
+        <h1
+          class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3"
+        >
           BCV
         </h1>
       </div>
@@ -34,12 +49,24 @@
         Tasas de Cambio del Dólar - Datos Históricos
       </p>
       <div class="mt-6 inline-flex items-center space-x-4">
-        <a href="https://bvc-vsb9.vercel.app/" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        <a
+          href="https://bvc-vsb9.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+        >
+          <svg
+            class="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
           </svg>
           Ver datos de la Bolsa de Valores de Caracas
         </a>
@@ -48,50 +75,154 @@
 
     <!-- Loading State -->
     <div *ngIf="loading" class="text-center py-20">
-      <div class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"></div>
+      <div
+        class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"
+      ></div>
       <p class="mt-4 text-gray-600">Cargando datos...</p>
     </div>
 
     <!-- Error State -->
-    <div *ngIf="error && !loading" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded shadow-lg mb-6">
+    <div
+      *ngIf="error && !loading"
+      class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded shadow-lg mb-6"
+    >
       <p class="font-semibold">{{ error }}</p>
-      <button 
-        (click)="refresh()" 
-        class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+      <button
+        (click)="refresh()"
+        class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
         Reintentar
       </button>
     </div>
 
     <!-- Rates Table -->
-    <div *ngIf="!loading && !error && rates.length > 0" class="bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div
+      *ngIf="!loading && !error && rates.length > 0"
+      class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8"
+    >
+      <!-- Control Panel -->
+      <div
+        class="bg-gradient-to-r from-indigo-50 to-blue-50 px-6 py-4 border-b border-indigo-200"
+      >
+        <div
+          class="flex flex-col md:flex-row md:items-end md:justify-between gap-4"
+        >
+          <!-- Filtro de rango de fechas -->
+          <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                for="dateFrom"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Desde:
+              </label>
+              <input
+                type="date"
+                id="dateFrom"
+                [(ngModel)]="dateFrom"
+                (change)="filterByDateRange()"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+            <div>
+              <label
+                for="dateTo"
+                class="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Hasta:
+              </label>
+              <input
+                type="date"
+                id="dateTo"
+                [(ngModel)]="dateTo"
+                (change)="filterByDateRange()"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+          </div>
+
+          <!-- Botón de limpiar y actualizar -->
+          <div class="flex gap-2 items-end">
+            <button
+              (click)="clearFilter()"
+              class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors font-medium"
+            >
+              Restablecer
+            </button>
+            <button
+              (click)="refresh()"
+              class="bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 inline-flex items-center"
+            >
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Actualizar Datos
+            </button>
+          </div>
+        </div>
+
+        <!-- Contador de resultados -->
+        <div class="mt-3 text-sm text-gray-600">
+          Total de registros: {{ filteredRates.length }} de
+          {{ rates.length }} (Página {{ currentPage }} de {{ totalPages }})
+        </div>
+      </div>
+
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-indigo-600 text-white">
             <tr>
-              <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
+              <th
+                scope="col"
+                class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider"
+              >
                 Fecha
               </th>
-              <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
+              <th
+                scope="col"
+                class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider"
+              >
                 Dólar (Bs.)
               </th>
-              <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider">
+              <th
+                scope="col"
+                class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wider"
+              >
                 Variación (%)
               </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
-            <tr *ngFor="let rate of rates" 
-                class="hover:bg-indigo-50 transition-colors duration-150">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <tr
+              *ngFor="let rate of paginatedRates"
+              class="hover:bg-indigo-50 transition-colors duration-150"
+            >
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+              >
                 {{ rate.date }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                 Bs. {{ rate.value || rate.dollar }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold" 
-                      [ngClass]="getVariationClass(rate.variation)">
-                  <span class="mr-1">{{ getVariationIcon(rate.variation) }}</span>
+                <span
+                  class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold"
+                  [ngClass]="getVariationClass(rate.variation)"
+                >
+                  <span class="mr-1">{{
+                    getVariationIcon(rate.variation)
+                  }}</span>
                   {{ rate.variation }}%
                 </span>
               </td>
@@ -99,33 +230,158 @@
           </tbody>
         </table>
       </div>
-      
-      <!-- Refresh Button -->
+
+      <!-- Paginación -->
       <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
-        <button 
-          (click)="refresh()" 
-          class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200 inline-flex items-center">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-          Actualizar Datos
-        </button>
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+        >
+          <!-- Información de paginación -->
+          <div class="text-sm text-gray-700">
+            Mostrando {{ (currentPage - 1) * pageSize + 1 }} -
+            {{
+              currentPage * pageSize > filteredRates.length
+                ? filteredRates.length
+                : currentPage * pageSize
+            }}
+            de {{ filteredRates.length }} registros
+          </div>
+
+          <!-- Controles de paginación -->
+          <div class="flex items-center space-x-2">
+            <button
+              (click)="previousPage()"
+              [disabled]="currentPage === 1"
+              [ngClass]="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
+              class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+            >
+              Anterior
+            </button>
+
+            <!-- Números de página -->
+            <div class="flex space-x-1">
+              <button
+                *ngFor="let page of getPageNumbers()"
+                (click)="goToPage(page)"
+                [ngClass]="{
+                  'bg-indigo-600 text-white': currentPage === page,
+                  'bg-white text-gray-700 hover:bg-gray-100':
+                    currentPage !== page
+                }"
+                class="px-3 py-2 text-sm font-medium border border-gray-300 rounded-lg transition-colors min-w-[40px]"
+              >
+                {{ page }}
+              </button>
+            </div>
+
+            <button
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages"
+              [ngClass]="{
+                'opacity-50 cursor-not-allowed': currentPage === totalPages
+              }"
+              class="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 transition-colors"
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div *ngIf="!loading && !error && rates.length === 0" class="bg-white rounded-2xl shadow-xl p-12 text-center">
-      <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    <div
+      *ngIf="!loading && !error && rates.length === 0"
+      class="bg-white rounded-2xl shadow-xl p-12 text-center mb-8"
+    >
+      <svg
+        class="mx-auto h-24 w-24 text-gray-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
       </svg>
-      <h3 class="mt-6 text-xl font-semibold text-gray-900">No hay datos disponibles</h3>
-      <p class="mt-2 text-gray-600">No se encontraron tasas de cambio para mostrar.</p>
-      <button 
-        (click)="refresh()" 
-        class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200">
+      <h3 class="mt-6 text-xl font-semibold text-gray-900">
+        No hay datos disponibles
+      </h3>
+      <p class="mt-2 text-gray-600">
+        No se encontraron tasas de cambio para mostrar.
+      </p>
+      <button
+        (click)="refresh()"
+        class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
+      >
         Actualizar
       </button>
     </div>
   </div>
-</div>
 
+  <!-- Footer -->
+  <footer
+    class="bg-gradient-to-r from-indigo-900 via-blue-900 to-indigo-800 text-white mt-16"
+  >
+    <div class="max-w-6xl mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <!-- Información del BCV -->
+        <div>
+          <h3 class="text-2xl font-bold mb-4 flex items-center">
+            <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"
+              />
+            </svg>
+            Datos Oficiales
+          </h3>
+          <p class="text-blue-200 leading-relaxed">
+            Los datos mostrados pertenecen al
+            <strong>Banco Central de Venezuela (BCV)</strong>. Esta aplicación
+            es únicamente y exclusivamente para la visualización de datos
+            históricos.
+          </p>
+        </div>
+
+        <!-- Información adicional -->
+        <div>
+          <h3 class="text-2xl font-bold mb-4 flex items-center">
+            <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            Información
+          </h3>
+          <p class="text-blue-200 leading-relaxed">
+            Esta herramienta permite consultar el historial de tasas de cambio
+            del dólar publicadas por el Banco Central de Venezuela de forma
+            transparente y accesible.
+          </p>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-indigo-700 my-8"></div>
+
+      <!-- Copyright y desarrollado por -->
+      <div class="text-center">
+        <p class="text-blue-300 mb-2">
+          © 2025 - Datos del Banco Central de Venezuela
+        </p>
+        <p class="text-blue-400 text-sm">
+          Desarrollado por la comunidad con
+          <span class="text-red-500 animate-pulse">♥</span>
+        </p>
+        <p class="text-blue-500 text-xs mt-4">
+          Esta aplicación no está afiliada oficialmente con el BCV
+        </p>
+      </div>
+    </div>
+  </footer>
+</div>
