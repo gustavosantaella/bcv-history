@@ -60,7 +60,7 @@ def history():
         # Verificar status code
         if response.status_code != 200:
             return {
-                "message": "Error al obtener los datos",
+                "message": "Error al obtener los datos de la API",
                 "status": "error",
                 "error": f"Status code: {response.status_code}, Response: {response.text[:200]}",
             }
