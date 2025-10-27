@@ -90,15 +90,6 @@ def history():
                 }
             )
 
-        # Verificar que tiene la estructura esperada
-        if "rates" not in data:
-            print(
-                {
-                    "message": "Estructura de datos incorrecta",
-                    "status": "error",
-                    "error": f"Respuesta no contiene 'rates': {data}",
-                }
-            )
         if data is not None:
             rates = data["rates"]
 
