@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -127,7 +127,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cdr: ChangeDetectorRef
   ) {
     this.translate.setDefaultLang('es');
     this.translate.use('es');
@@ -261,33 +262,64 @@ export class AppComponent implements OnInit, OnDestroy {
     this.updateBarChart();
     this.updatePieChart();
     this.updateRadarChart();
+
+    // Usar setTimeout para asegurar que Angular detecte los cambios
+    setTimeout(() => {
+      this.cdr.detectChanges();
+    }, 0);
   }
 
   updateLineChart(): void {
     const data = this.filteredRates.slice(0, 100); // Últimos 100 registros para mejor rendimiento
-    this.lineChartData.labels = data.map((rate) => rate.date).reverse();
-    this.lineChartData.datasets[0].data = data
+    const labels = data.map((rate) => rate.date).reverse();
+    const values = data
       .map((rate) => parseFloat(rate.value || rate.dollar || '0'))
       .reverse();
+
+    // Crear nueva referencia para que Angular detecte el cambio
+    this.lineChartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: values,
+          label: 'Precio del Dólar (Bs.)',
+          borderColor: 'rgba(99, 102, 241, 1)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          pointRadius: 2,
+          pointHoverRadius: 4,
+        },
+      ],
+    };
   }
 
   updateBarChart(): void {
     const data = this.filteredRates.slice(0, 30); // Últimos 30 registros
-    this.barChartData.labels = data
+    const labels = data
       .map((rate) => rate.date.split('/')[0] + '/' + rate.date.split('/')[1])
       .reverse();
 
     const variations = data
       .map((rate) => parseFloat(rate.variation || '0'))
       .reverse();
-    this.barChartData.datasets[0].data = variations;
-    this.barChartData.datasets[0].backgroundColor = variations.map((v) =>
+    const colors = variations.map((v) =>
       v > 0
         ? 'rgba(34, 197, 94, 0.8)'
         : v < 0
         ? 'rgba(239, 68, 68, 0.8)'
         : 'rgba(156, 163, 175, 0.8)'
     );
+
+    // Crear nueva referencia para que Angular detecte el cambio
+    this.barChartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: variations,
+          label: 'Variación (%)',
+          backgroundColor: colors,
+        },
+      ],
+    };
   }
 
   updatePieChart(): void {
@@ -302,8 +334,25 @@ export class AppComponent implements OnInit, OnDestroy {
       dataByYear[year]++;
     });
 
-    this.pieChartData.labels = Object.keys(dataByYear).sort();
-    this.pieChartData.datasets[0].data = Object.values(dataByYear);
+    const labels = Object.keys(dataByYear).sort();
+    const data = Object.values(dataByYear);
+
+    // Crear nueva referencia para que Angular detecte el cambio
+    this.pieChartData = {
+      labels: labels,
+      datasets: [
+        {
+          data: data,
+          backgroundColor: [
+            'rgba(99, 102, 241, 0.8)',
+            'rgba(34, 197, 94, 0.8)',
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(236, 72, 153, 0.8)',
+          ],
+        },
+      ],
+    };
   }
 
   updateRadarChart(): void {
@@ -322,7 +371,6 @@ export class AppComponent implements OnInit, OnDestroy {
       'Nov',
       'Dic',
     ];
-    this.radarChartData.labels = months;
 
     const dataByMonth = new Array(12).fill(0);
     let countByMonth = new Array(12).fill(0);
@@ -341,7 +389,18 @@ export class AppComponent implements OnInit, OnDestroy {
       countByMonth[index] > 0 ? sum / countByMonth[index] : 0
     );
 
-    this.radarChartData.datasets[0].data = avgByMonth;
+    // Crear nueva referencia para que Angular detecte el cambio
+    this.radarChartData = {
+      labels: months,
+      datasets: [
+        {
+          label: 'Tendencia',
+          data: avgByMonth,
+          backgroundColor: 'rgba(99, 102, 241, 0.3)',
+          borderColor: 'rgba(99, 102, 241, 1)',
+        },
+      ],
+    };
   }
 
   updatePagination(): void {
@@ -398,6 +457,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.filteredRates = [...this.rates]; // Ya viene ordenado de loadRates
     this.currentPage = 1;
     this.updatePagination();
+    this.updateCharts();
   }
 
   closeAlert(): void {

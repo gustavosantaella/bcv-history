@@ -9,6 +9,11 @@
       >
         <!-- Title and Clock -->
         <div class="flex items-center space-x-4">
+          <img
+            src="https://pbs.twimg.com/profile_images/927966724753944577/SAw5bHeo_400x400.jpg"
+            alt="BCV Logo"
+            class="w-16 h-16 rounded-full border-2 border-white/20 shadow-lg"
+          />
           <div>
             <h1 class="text-2xl font-bold">{{ "APP_TITLE" | translate }}</h1>
             <p class="text-sm text-blue-200">
@@ -91,11 +96,13 @@
     <!-- Header -->
     <header class="text-center mb-12">
       <div class="inline-block bg-white p-6 rounded-2xl shadow-lg mb-6">
-        <h1
-          class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-3"
-        >
-          BCV
-        </h1>
+        <div class="flex items-center justify-center gap-4">
+          <img
+            src="https://pbs.twimg.com/profile_images/927966724753944577/SAw5bHeo_400x400.jpg"
+            alt="BCV Logo"
+            class="w-20 h-20 md:w-28 md:h-28 rounded-full border-4 border-blue-500 shadow-lg"
+          />
+        </div>
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
         {{ "APP_TITLE" | translate }}
@@ -150,12 +157,11 @@
       </button>
     </div>
 
-    <!-- Rates Table -->
+    <!-- Control Panel -->
     <div
       *ngIf="!loading && !error && rates.length > 0"
       class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8"
     >
-      <!-- Control Panel -->
       <div
         class="bg-gradient-to-r from-indigo-50 to-blue-50 px-6 py-4 border-b border-indigo-200"
       >
@@ -232,7 +238,71 @@
           {{ rates.length }} (Página {{ currentPage }} de {{ totalPages }})
         </div>
       </div>
+    </div>
 
+    <!-- Gráficas -->
+    <div
+      *ngIf="!loading && !error && rates.length > 0"
+      class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8"
+    >
+      <!-- Gráfica de Línea: Evolución del Precio -->
+      <div class="bg-white rounded-2xl shadow-xl p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+          Evolución del Precio del Dólar
+        </h3>
+        <canvas
+          baseChart
+          [data]="lineChartData"
+          [options]="lineChartOptions"
+          [type]="'line'"
+        >
+        </canvas>
+      </div>
+
+      <!-- Gráfica de Barras: Variación por Día -->
+      <div class="bg-white rounded-2xl shadow-xl p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Variación Diaria</h3>
+        <canvas
+          baseChart
+          [data]="barChartData"
+          [options]="barChartOptions"
+          [type]="'bar'"
+        >
+        </canvas>
+      </div>
+
+      <!-- Gráfica de Pie: Registros por Año -->
+      <div class="bg-white rounded-2xl shadow-xl p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+          Distribución por Año
+        </h3>
+        <canvas
+          baseChart
+          [data]="pieChartData"
+          [options]="pieChartOptions"
+          [type]="'pie'"
+        >
+        </canvas>
+      </div>
+
+      <!-- Gráfica Radar: Tendencia por Mes -->
+      <div class="bg-white rounded-2xl shadow-xl p-6">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Tendencia por Mes</h3>
+        <canvas
+          baseChart
+          [data]="radarChartData"
+          [options]="radarChartOptions"
+          [type]="'radar'"
+        >
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Rates Table -->
+    <div
+      *ngIf="!loading && !error && rates.length > 0"
+      class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8"
+    >
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-indigo-600 text-white">
@@ -341,64 +411,6 @@
             </button>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Gráficas -->
-    <div
-      *ngIf="!loading && !error && rates.length > 0"
-      class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6"
-    >
-      <!-- Gráfica de Línea: Evolución del Precio -->
-      <div class="bg-white rounded-2xl shadow-xl p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">
-          Evolución del Precio del Dólar
-        </h3>
-        <canvas
-          baseChart
-          [data]="lineChartData"
-          [options]="lineChartOptions"
-          [type]="'line'"
-        >
-        </canvas>
-      </div>
-
-      <!-- Gráfica de Barras: Variación por Día -->
-      <div class="bg-white rounded-2xl shadow-xl p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Variación Diaria</h3>
-        <canvas
-          baseChart
-          [data]="barChartData"
-          [options]="barChartOptions"
-          [type]="'bar'"
-        >
-        </canvas>
-      </div>
-
-      <!-- Gráfica de Pie: Registros por Año -->
-      <div class="bg-white rounded-2xl shadow-xl p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">
-          Distribución por Año
-        </h3>
-        <canvas
-          baseChart
-          [data]="pieChartData"
-          [options]="pieChartOptions"
-          [type]="'pie'"
-        >
-        </canvas>
-      </div>
-
-      <!-- Gráfica Radar: Tendencia por Mes -->
-      <div class="bg-white rounded-2xl shadow-xl p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">Tendencia por Mes</h3>
-        <canvas
-          baseChart
-          [data]="radarChartData"
-          [options]="radarChartOptions"
-          [type]="'radar'"
-        >
-        </canvas>
       </div>
     </div>
 
