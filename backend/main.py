@@ -59,37 +59,45 @@ def history():
 
         # Verificar status code
         if response.status_code != 200:
-            return {
-                "message": "Error al obtener los datos de la API",
-                "status": "error",
-                "error": f"Status code: {response.status_code}, Response: {response.text[:200]}",
-            }
+            print(
+                {
+                    "message": f"Error al obtener los datos de la API: {response.status_code}",
+                    "status": "error",
+                    "error": f"Status code: {response.status_code}, Response: {response.text[:200]}",
+                }
+            )
 
         # Verificar que la respuesta no esté vacía
         if not response.text:
-            return {
-                "message": "Respuesta vacía de la API",
-                "status": "error",
-                "error": "La API retornó una respuesta vacía",
-            }
+            print(
+                {
+                    "message": f"Respuesta vacía de la API: {response.text}",
+                    "status": "error",
+                    "error": "La API retornó una respuesta vacía",
+                }
+            )
 
         # Intentar parsear JSON con mejor manejo de errores
         try:
             data = response.json()
         except ValueError as json_error:
-            return {
-                "message": "Error al parsear JSON",
-                "status": "error",
-                "error": f"JSON error: {str(json_error)}, Response: {response.text[:200]}",
-            }
+            print(
+                {
+                    "message": f"Error al parsear JSON: {str(json_error)}",
+                    "status": "error",
+                    "error": f"JSON error: {str(json_error)}, Response: {response.text[:200]}",
+                }
+            )
 
         # Verificar que tiene la estructura esperada
         if "rates" not in data:
-            return {
-                "message": "Estructura de datos incorrecta",
-                "status": "error",
-                "error": f"Respuesta no contiene 'rates': {data}",
-            }
+            print(
+                {
+                    "message": "Estructura de datos incorrecta",
+                    "status": "error",
+                    "error": f"Respuesta no contiene 'rates': {data}",
+                }
+            )
 
         rates = data["rates"]
 
