@@ -45,35 +45,45 @@ def read_root():
 
 @app.get("/history")
 def history():
-    response = requests.get(HISTORY_API_URL)
-    data = response.json()
-    rates = data["rates"]
-    today = rates[0]
-    yesterday = rates[1]
-    dollar = today["dollar"]
-    collection = app.database
+    try:
+        response = requests.get(HISTORY_API_URL)
+        data = response.json()
+        rates = data["rates"]
+        today = rates[0]
+        yesterday = rates[1]
+        dollar = today["dollar"]
+        collection = app.database
 
-    date_value = today["date"]
-    if isinstance(date_value, str):
-        date_obj = datetime.strptime(date_value, "%Y-%m-%d")
-    else:
-        date_obj = date_value
-    date = date_obj.strftime("%d/%m/%Y")
-    variation = _get_variation(today["dollar"], yesterday["dollar"])
-    data_to_insert = {
-        "dollar": dollar,
-        "date": date,
-        "variation": variation,
-    }
-    if _already_exists_by_date(date) is None:
-        print("Inserting data...")
-        collection.insert_one(data_to_insert)
+        date_value = today["date"]
+        if isinstance(date_value, str):
+            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
+        else:
+            date_obj = date_value
+        date = date_obj.strftime("%d/%m/%Y")
+        variation = _get_variation(today["dollar"], yesterday["dollar"])
+        data_to_insert = {
+            "dollar": dollar,
+            "date": date,
+            "variation": variation,
+        }
+        if _already_exists_by_date(date) is None:
+            print("Inserting data...")
+            collection.insert_one(data_to_insert)
 
-    return list(collection.find({}, {"_id": 0}))
+        return list(collection.find({}, {"_id": 0}))
+    except Exception as e:
+        print(e)
+        return {
+            "message": "Error al obtener los datos",
+            "status": "error",
+            "error": str(e),
+        }
 
 
 if __name__ == "__main__":
     app.database = database_connection()
     uvicorn.run(app, host="0.0.0.0", port=8000)
 else:
+    app.database = database_connection()
+
     app
