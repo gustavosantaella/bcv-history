@@ -14,11 +14,15 @@ _database = None
 
 
 def database_connection():
-    global _database
-    if _database is not None:
+    try:
+        global _database
+        if _database is not None:
+            return _database
+        client = MongoClient(_MONGO_URI)
+        db = client[_MONGO_DB]
+        collection = db[_HISTORY_COLLECTION]
+        _database = collection
         return _database
-    client = MongoClient(_MONGO_URI)
-    db = client[_MONGO_DB]
-    collection = db[_HISTORY_COLLECTION]
-    _database = collection
-    return _database
+    except Exception as e:
+        print(f"Error al conectar a la base de datos: {e}")
+        return None

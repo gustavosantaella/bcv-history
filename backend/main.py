@@ -46,9 +46,60 @@ def read_root():
 @app.get("/history")
 def history():
     try:
-        response = requests.get(HISTORY_API_URL)
-        data = response.json()
+        # Verificar si HISTORY_API_URL está configurado
+        if not HISTORY_API_URL:
+            return {
+                "message": "HISTORY_API_URL no está configurado",
+                "status": "error",
+                "error": "Variable de entorno HISTORY_API_URL no encontrada",
+            }
+
+        print(f"Requesting data from: {HISTORY_API_URL}")
+        response = requests.get(HISTORY_API_URL, timeout=10)
+
+        # Verificar status code
+        if response.status_code != 200:
+            return {
+                "message": "Error al obtener los datos",
+                "status": "error",
+                "error": f"Status code: {response.status_code}, Response: {response.text[:200]}",
+            }
+
+        # Verificar que la respuesta no esté vacía
+        if not response.text:
+            return {
+                "message": "Respuesta vacía de la API",
+                "status": "error",
+                "error": "La API retornó una respuesta vacía",
+            }
+
+        # Intentar parsear JSON con mejor manejo de errores
+        try:
+            data = response.json()
+        except ValueError as json_error:
+            return {
+                "message": "Error al parsear JSON",
+                "status": "error",
+                "error": f"JSON error: {str(json_error)}, Response: {response.text[:200]}",
+            }
+
+        # Verificar que tiene la estructura esperada
+        if "rates" not in data:
+            return {
+                "message": "Estructura de datos incorrecta",
+                "status": "error",
+                "error": f"Respuesta no contiene 'rates': {data}",
+            }
+
         rates = data["rates"]
+
+        if len(rates) < 2:
+            return {
+                "message": "No hay suficientes datos en la respuesta",
+                "status": "error",
+                "error": f"Solo se encontraron {len(rates)} registros, se necesitan al menos 2",
+            }
+
         today = rates[0]
         yesterday = rates[1]
         dollar = today["dollar"]
@@ -71,12 +122,28 @@ def history():
             collection.insert_one(data_to_insert)
 
         return list(collection.find({}, {"_id": 0}))
+
+    except requests.exceptions.RequestException as req_error:
+        return {
+            "message": "Error de conexión",
+            "status": "error",
+            "error": f"Request error: {str(req_error)}",
+        }
+    except KeyError as key_error:
+        return {
+            "message": "Error en la estructura de datos",
+            "status": "error",
+            "error": f"Key error: {str(key_error)}",
+        }
     except Exception as e:
-        print(e)
+        import traceback
+
+        print(f"Unexpected error: {traceback.format_exc()}")
         return {
             "message": "Error al obtener los datos",
             "status": "error",
             "error": str(e),
+            "traceback": traceback.format_exc()[:500],
         }
 
 
