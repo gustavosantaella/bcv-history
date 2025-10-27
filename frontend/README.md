@@ -9,12 +9,25 @@ Aplicación Angular con Tailwind CSS para mostrar las tasas de cambio del Banco 
 - ✅ Soporte para múltiples entornos (development, local, production)
 - ✅ Diseño responsive
 - ✅ Consumo de API REST
+- ✅ Gráficas interactivas (Chart.js):
+  - Evolución del precio del dólar (línea temporal)
+  - Variación diaria (gráfica de barras con colores por positivo/negativo)
+  - Distribución de registros por año (gráfica de pie)
+  - Tendencia por mes (gráfica radar)
+- ✅ Paginación (20 registros por página)
+- ✅ Filtros por rango de fechas
+- ✅ Ordenamiento automático (más reciente primero)
 
 ## Instalación
 
 1. Instalar dependencias:
 ```bash
 npm install
+```
+
+**Nota:** Si aparece un error relacionado con `chart.js` o `ng2-charts`, ejecuta:
+```bash
+npm install chart.js@^4.4.0 ng2-charts@^6.0.0
 ```
 
 ## Desarrollo

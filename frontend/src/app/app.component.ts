@@ -1,17 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { ApiService } from './services/api.service';
 import { Rate } from './models/rate.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BaseChartDirective, TranslateModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  currentTime: string = '';
+  currentDate: string = '';
+  currentLanguage: string = 'es';
+  private timeInterval?: any;
+
   rates: Rate[] = [];
   filteredRates: Rate[] = [];
   paginatedRates: Rate[] = [];
@@ -26,7 +37,141 @@ export class AppComponent implements OnInit {
   pageSize: number = 20;
   totalPages: number = 0;
 
-  constructor(private apiService: ApiService) {}
+  // Configuraciones de gráficas
+  public lineChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+    },
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+    },
+  };
+  public lineChartData: ChartData<'line'> = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Precio del Dólar (Bs.)',
+        borderColor: 'rgba(99, 102, 241, 1)',
+        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+        pointRadius: 2,
+        pointHoverRadius: 4,
+      },
+    ],
+  };
+
+  public barChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+    },
+  };
+  public barChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        label: 'Variación (%)',
+        backgroundColor: [],
+      },
+    ],
+  };
+
+  public pieChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: true, position: 'top' },
+    },
+  };
+  public pieChartData: ChartData<'pie'> = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: [
+          'rgba(99, 102, 241, 0.8)',
+          'rgba(34, 197, 94, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(236, 72, 153, 0.8)',
+        ],
+      },
+    ],
+  };
+
+  public radarChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    plugins: {
+      legend: { display: true },
+    },
+    scales: {
+      r: {
+        beginAtZero: true,
+      },
+    },
+  };
+  public radarChartData: ChartData<'radar'> = {
+    labels: [],
+    datasets: [
+      {
+        label: 'Tendencia',
+        data: [],
+        backgroundColor: 'rgba(99, 102, 241, 0.3)',
+        borderColor: 'rgba(99, 102, 241, 1)',
+      },
+    ],
+  };
+
+  constructor(
+    private apiService: ApiService,
+    private translate: TranslateService
+  ) {
+    this.translate.setDefaultLang('es');
+    this.translate.use('es');
+    this.updateClock();
+    // Actualizar reloj cada segundo
+    this.timeInterval = setInterval(() => {
+      this.updateClock();
+    }, 1000);
+  }
+
+  updateClock(): void {
+    const now = new Date();
+    this.currentTime = now.toLocaleTimeString(
+      this.currentLanguage === 'es' ? 'es-VE' : 'en-US',
+      {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      }
+    );
+    this.currentDate = now.toLocaleDateString(
+      this.currentLanguage === 'es' ? 'es-VE' : 'en-US',
+      {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }
+    );
+  }
+
+  changeLanguage(language: string): void {
+    this.currentLanguage = language;
+    this.translate.use(language);
+    this.updateClock();
+  }
+
+  ngOnDestroy(): void {
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   ngOnInit(): void {
     this.setDefaultDateRange();
@@ -52,6 +197,7 @@ export class AppComponent implements OnInit {
         this.rates = this.sortByDateDescending(data);
         this.currentPage = 1;
         this.filterByDateRange();
+        this.updateCharts();
         this.loading = false;
       },
       error: (err) => {
@@ -91,6 +237,7 @@ export class AppComponent implements OnInit {
     if (!this.dateFrom || !this.dateTo) {
       this.filteredRates = [...this.rates];
       this.updatePagination();
+      this.updateCharts();
       return;
     }
 
@@ -106,6 +253,95 @@ export class AppComponent implements OnInit {
     });
     this.currentPage = 1;
     this.updatePagination();
+    this.updateCharts();
+  }
+
+  updateCharts(): void {
+    this.updateLineChart();
+    this.updateBarChart();
+    this.updatePieChart();
+    this.updateRadarChart();
+  }
+
+  updateLineChart(): void {
+    const data = this.filteredRates.slice(0, 100); // Últimos 100 registros para mejor rendimiento
+    this.lineChartData.labels = data.map((rate) => rate.date).reverse();
+    this.lineChartData.datasets[0].data = data
+      .map((rate) => parseFloat(rate.value || rate.dollar || '0'))
+      .reverse();
+  }
+
+  updateBarChart(): void {
+    const data = this.filteredRates.slice(0, 30); // Últimos 30 registros
+    this.barChartData.labels = data
+      .map((rate) => rate.date.split('/')[0] + '/' + rate.date.split('/')[1])
+      .reverse();
+
+    const variations = data
+      .map((rate) => parseFloat(rate.variation || '0'))
+      .reverse();
+    this.barChartData.datasets[0].data = variations;
+    this.barChartData.datasets[0].backgroundColor = variations.map((v) =>
+      v > 0
+        ? 'rgba(34, 197, 94, 0.8)'
+        : v < 0
+        ? 'rgba(239, 68, 68, 0.8)'
+        : 'rgba(156, 163, 175, 0.8)'
+    );
+  }
+
+  updatePieChart(): void {
+    // Agrupar por año
+    const dataByYear: { [key: string]: number } = {};
+
+    this.filteredRates.forEach((rate) => {
+      const year = rate.date.split('/')[2]; // Año está en posición [2] en DD/MM/YYYY
+      if (!dataByYear[year]) {
+        dataByYear[year] = 0;
+      }
+      dataByYear[year]++;
+    });
+
+    this.pieChartData.labels = Object.keys(dataByYear).sort();
+    this.pieChartData.datasets[0].data = Object.values(dataByYear);
+  }
+
+  updateRadarChart(): void {
+    // Gráfica de tendencias por mes
+    const months = [
+      'Ene',
+      'Feb',
+      'Mar',
+      'Abr',
+      'May',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dic',
+    ];
+    this.radarChartData.labels = months;
+
+    const dataByMonth = new Array(12).fill(0);
+    let countByMonth = new Array(12).fill(0);
+
+    this.filteredRates.forEach((rate) => {
+      const parts = rate.date.split('/');
+      const month = parseInt(parts[1], 10) - 1; // Mes está en posición [1]
+      if (month >= 0 && month < 12) {
+        dataByMonth[month] += parseFloat(rate.variation || '0');
+        countByMonth[month]++;
+      }
+    });
+
+    // Calcular promedios
+    const avgByMonth = dataByMonth.map((sum, index) =>
+      countByMonth[index] > 0 ? sum / countByMonth[index] : 0
+    );
+
+    this.radarChartData.datasets[0].data = avgByMonth;
   }
 
   updatePagination(): void {

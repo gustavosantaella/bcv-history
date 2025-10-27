@@ -52,14 +52,12 @@ def history():
     return list(collection.find({}, {"_id": 0}))
 
 
-if __name__ == "__main__":
-
-    app.database = database_connection()
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+app.database = database_connection()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+uvicorn.run(app, host="0.0.0.0", port=8000)
