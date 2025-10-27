@@ -45,6 +45,7 @@ def read_root():
 
 @app.get("/history")
 def history():
+    collection = app.database
     try:
         # Verificar si HISTORY_API_URL está configurado
         if not HISTORY_API_URL:
@@ -103,7 +104,6 @@ def history():
             today = rates[0]
             yesterday = rates[1]
             dollar = today["dollar"]
-            collection = app.database
 
             date_value = today["date"]
             if isinstance(date_value, str):
