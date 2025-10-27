@@ -2,3 +2,4 @@
 .backend/.venv
 .backend/__pycache__
 history.html
+.vercel

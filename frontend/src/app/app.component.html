@@ -85,10 +85,10 @@
         </h1>
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-        Banco Central de Venezuela
+        {{ 'APP_TITLE' | translate }}
       </h2>
       <p class="text-gray-600 text-xl">
-        Tasas de Cambio del Dólar - Datos Históricos
+        {{ 'APP_SUBTITLE' | translate }}
       </p>
       <div class="mt-6 inline-flex items-center space-x-4">
         <a
@@ -110,7 +110,7 @@
               d="M13 7l5 5m0 0l-5 5m5-5H6"
             />
           </svg>
-          Ver datos de la Bolsa de Valores de Caracas
+          {{ 'VIEW_BVC' | translate }}
         </a>
       </div>
     </header>
@@ -120,7 +120,7 @@
       <div
         class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"
       ></div>
-      <p class="mt-4 text-gray-600">Cargando datos...</p>
+      <p class="mt-4 text-gray-600">{{ 'LOADING' | translate }}</p>
     </div>
 
     <!-- Error State -->
@@ -128,12 +128,12 @@
       *ngIf="error && !loading"
       class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded shadow-lg mb-6"
     >
-      <p class="font-semibold">{{ error }}</p>
+      <p class="font-semibold">{{ 'ERROR_MESSAGE' | translate }}</p>
       <button
         (click)="refresh()"
         class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
       >
-        Reintentar
+        {{ 'RETRY' | translate }}
       </button>
     </div>
 

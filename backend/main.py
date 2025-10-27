@@ -11,6 +11,21 @@ from fastapi.middleware.cors import CORSMiddleware
 HISTORY_API_URL = getenv("HISTORY_API_URL")
 app = FastAPI()
 
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Inicializar base de datos al arrancar
+@app.on_event("startup")
+async def startup_event():
+    app.database = database_connection()
+
 
 def _get_variation(today, yesterday):
     today = float(today)
@@ -21,6 +36,11 @@ def _get_variation(today, yesterday):
 def _already_exists_by_date(date: str):
     collection = app.database
     return collection.find_one({"date": date.strip()}, {"_id": 0})
+
+
+@app.get("/")
+def read_root():
+    return {"message": "BCV API", "status": "online"}
 
 
 @app.get("/history")
@@ -52,12 +72,6 @@ def history():
     return list(collection.find({}, {"_id": 0}))
 
 
-app.database = database_connection()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    app.database = database_connection()
+    uvicorn.run(app, host="0.0.0.0", port=8000)
