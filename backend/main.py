@@ -78,6 +78,7 @@ def history():
             )
 
         # Intentar parsear JSON con mejor manejo de errores
+        data = None
         try:
             data = response.json()
         except ValueError as json_error:
@@ -98,36 +99,36 @@ def history():
                     "error": f"Respuesta no contiene 'rates': {data}",
                 }
             )
+        if data is not None:
+            rates = data["rates"]
 
-        rates = data["rates"]
+            if len(rates) < 2:
+                return {
+                    "message": "No hay suficientes datos en la respuesta",
+                    "status": "error",
+                    "error": f"Solo se encontraron {len(rates)} registros, se necesitan al menos 2",
+                }
 
-        if len(rates) < 2:
-            return {
-                "message": "No hay suficientes datos en la respuesta",
-                "status": "error",
-                "error": f"Solo se encontraron {len(rates)} registros, se necesitan al menos 2",
+            today = rates[0]
+            yesterday = rates[1]
+            dollar = today["dollar"]
+            collection = app.database
+
+            date_value = today["date"]
+            if isinstance(date_value, str):
+                date_obj = datetime.strptime(date_value, "%Y-%m-%d")
+            else:
+                date_obj = date_value
+            date = date_obj.strftime("%d/%m/%Y")
+            variation = _get_variation(today["dollar"], yesterday["dollar"])
+            data_to_insert = {
+                "dollar": dollar,
+                "date": date,
+                "variation": variation,
             }
-
-        today = rates[0]
-        yesterday = rates[1]
-        dollar = today["dollar"]
-        collection = app.database
-
-        date_value = today["date"]
-        if isinstance(date_value, str):
-            date_obj = datetime.strptime(date_value, "%Y-%m-%d")
-        else:
-            date_obj = date_value
-        date = date_obj.strftime("%d/%m/%Y")
-        variation = _get_variation(today["dollar"], yesterday["dollar"])
-        data_to_insert = {
-            "dollar": dollar,
-            "date": date,
-            "variation": variation,
-        }
-        if _already_exists_by_date(date) is None:
-            print("Inserting data...")
-            collection.insert_one(data_to_insert)
+            if _already_exists_by_date(date) is None:
+                print("Inserting data...")
+                collection.insert_one(data_to_insert)
 
         return list(collection.find({}, {"_id": 0}))
 
