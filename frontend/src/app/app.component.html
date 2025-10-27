@@ -110,28 +110,60 @@
       <p class="text-gray-600 text-xl">
         {{ "APP_SUBTITLE" | translate }}
       </p>
-      <div class="mt-6 inline-flex items-center space-x-4">
-        <a
-          href="https://bvc-vsb9.vercel.app/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+
+      <!-- Último dato más reciente -->
+      <div *ngIf="!loading && !error && rates.length > 0">
+        <div
+          class="mt-6 inline-block bg-gradient-to-r from-indigo-600 to-blue-600 text-white p-6 rounded-2xl shadow-xl w-full max-w-4xl"
         >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <p class="text-sm opacity-90 mb-2 uppercase tracking-wide">
+            Último dato publicado
+          </p>
+          <div class="flex items-center justify-between gap-6 flex-wrap">
+            <div>
+              <p class="text-lg font-semibold mb-1">{{ rates[0].date }}</p>
+              <p class="text-3xl md:text-4xl font-bold">
+                Bs. {{ rates[0].value || rates[0].dollar }}
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm opacity-90 mb-1">Variación</p>
+              <span
+                class="inline-flex items-center px-4 py-2 rounded-lg text-lg font-bold"
+                [ngClass]="getVariationClassForCard(rates[0].variation)"
+              >
+                <span class="mr-2 text-2xl">{{
+                  getVariationIcon(rates[0].variation)
+                }}</span>
+                {{ rates[0].variation }}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 text-center">
+          <a
+            href="https://bvc-vsb9.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 7l5 5m0 0l-5 5m5-5H6"
-            />
-          </svg>
-          {{ "VIEW_BVC" | translate }}
-        </a>
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
+            </svg>
+            {{ "VIEW_BVC" | translate }}
+          </a>
+        </div>
       </div>
     </header>
 

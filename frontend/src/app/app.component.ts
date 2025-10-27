@@ -474,6 +474,16 @@ export class AppComponent implements OnInit, OnDestroy {
     return 'text-gray-600 bg-gray-100';
   }
 
+  getVariationClassForCard(variation: string): string {
+    const value = parseFloat(variation);
+    if (value > 0) {
+      return 'bg-green-400/20 text-green-100';
+    } else if (value < 0) {
+      return 'bg-red-400/20 text-red-100';
+    }
+    return 'bg-white/20 text-white';
+  }
+
   getVariationIcon(variation: string): string {
     const value = parseFloat(variation);
     if (value > 0) {
