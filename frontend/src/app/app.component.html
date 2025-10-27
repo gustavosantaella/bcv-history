@@ -1,13 +1,19 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
   <!-- Header with Clock and Language Selector -->
-  <header class="bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 text-white shadow-lg sticky top-0 z-50">
+  <header
+    class="bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 text-white shadow-lg sticky top-0 z-50"
+  >
     <div class="max-w-7xl mx-auto px-4 py-4">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div
+        class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+      >
         <!-- Title and Clock -->
         <div class="flex items-center space-x-4">
           <div>
-            <h1 class="text-2xl font-bold">{{ 'APP_TITLE' | translate }}</h1>
-            <p class="text-sm text-blue-200">{{ 'APP_SUBTITLE' | translate }}</p>
+            <h1 class="text-2xl font-bold">{{ "APP_TITLE" | translate }}</h1>
+            <p class="text-sm text-blue-200">
+              {{ "APP_SUBTITLE" | translate }}
+            </p>
           </div>
         </div>
 
@@ -16,14 +22,18 @@
           <!-- Clock -->
           <div class="text-right">
             <div class="text-2xl font-bold">{{ currentTime }}</div>
-            <div class="text-sm text-blue-200 capitalize">{{ currentDate }}</div>
+            <div class="text-sm text-blue-200 capitalize">
+              {{ currentDate }}
+            </div>
           </div>
 
           <!-- Language Selector -->
-          <div class="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-lg">
+          <div
+            class="flex items-center space-x-2 bg-white/10 px-3 py-2 rounded-lg"
+          >
             <button
               (click)="changeLanguage('es')"
-              [class.bg-white/20]="currentLanguage === 'es'"
+              [ngClass]="{ 'bg-white/20': currentLanguage === 'es' }"
               class="px-3 py-1 rounded hover:bg-white/20 transition-colors font-semibold"
             >
               ES
@@ -31,7 +41,7 @@
             <span class="text-white/50">|</span>
             <button
               (click)="changeLanguage('en')"
-              [class.bg-white/20]="currentLanguage === 'en'"
+              [ngClass]="{ 'bg-white/20': currentLanguage === 'en' }"
               class="px-3 py-1 rounded hover:bg-white/20 transition-colors font-semibold"
             >
               EN
@@ -54,9 +64,12 @@
           />
         </svg>
         <p class="text-sm font-medium">
-          <strong>{{ 'ALERT_TITLE' | translate }}</strong> {{ 'ALERT_TEXT' | translate }} 
-          <strong>Banco Central de Venezuela</strong>. {{ 'ALERT_TEXT_2' | translate }} 
-          <strong>{{ 'ALERT_TEXT_3' | translate }}</strong>.
+          <strong>{{ "ALERT_TITLE" | translate }}</strong>
+          {{ "ALERT_TEXT" | translate }}
+          <strong>Banco Central de Venezuela</strong>.
+          {{ "ALERT_TEXT_2" | translate }}
+          <strong>{{ "ALERT_TEXT_3" | translate }}</strong
+          >.
         </p>
       </div>
       <button
@@ -85,10 +98,10 @@
         </h1>
       </div>
       <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-        {{ 'APP_TITLE' | translate }}
+        {{ "APP_TITLE" | translate }}
       </h2>
       <p class="text-gray-600 text-xl">
-        {{ 'APP_SUBTITLE' | translate }}
+        {{ "APP_SUBTITLE" | translate }}
       </p>
       <div class="mt-6 inline-flex items-center space-x-4">
         <a
@@ -110,7 +123,7 @@
               d="M13 7l5 5m0 0l-5 5m5-5H6"
             />
           </svg>
-          {{ 'VIEW_BVC' | translate }}
+          {{ "VIEW_BVC" | translate }}
         </a>
       </div>
     </header>
@@ -120,7 +133,7 @@
       <div
         class="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500"
       ></div>
-      <p class="mt-4 text-gray-600">{{ 'LOADING' | translate }}</p>
+      <p class="mt-4 text-gray-600">{{ "LOADING" | translate }}</p>
     </div>
 
     <!-- Error State -->
@@ -128,12 +141,12 @@
       *ngIf="error && !loading"
       class="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded shadow-lg mb-6"
     >
-      <p class="font-semibold">{{ 'ERROR_MESSAGE' | translate }}</p>
+      <p class="font-semibold">{{ "ERROR_MESSAGE" | translate }}</p>
       <button
         (click)="refresh()"
         class="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
       >
-        {{ 'RETRY' | translate }}
+        {{ "RETRY" | translate }}
       </button>
     </div>
 
@@ -332,28 +345,33 @@
     </div>
 
     <!-- Gráficas -->
-    <div *ngIf="!loading && !error && rates.length > 0" class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div
+      *ngIf="!loading && !error && rates.length > 0"
+      class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6"
+    >
       <!-- Gráfica de Línea: Evolución del Precio -->
       <div class="bg-white rounded-2xl shadow-xl p-6">
         <h3 class="text-xl font-bold text-gray-800 mb-4">
           Evolución del Precio del Dólar
         </h3>
-        <canvas baseChart
+        <canvas
+          baseChart
           [data]="lineChartData"
           [options]="lineChartOptions"
-          [type]="'line'">
+          [type]="'line'"
+        >
         </canvas>
       </div>
 
       <!-- Gráfica de Barras: Variación por Día -->
       <div class="bg-white rounded-2xl shadow-xl p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">
-          Variación Diaria
-        </h3>
-        <canvas baseChart
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Variación Diaria</h3>
+        <canvas
+          baseChart
           [data]="barChartData"
           [options]="barChartOptions"
-          [type]="'bar'">
+          [type]="'bar'"
+        >
         </canvas>
       </div>
 
@@ -362,22 +380,24 @@
         <h3 class="text-xl font-bold text-gray-800 mb-4">
           Distribución por Año
         </h3>
-        <canvas baseChart
+        <canvas
+          baseChart
           [data]="pieChartData"
           [options]="pieChartOptions"
-          [type]="'pie'">
+          [type]="'pie'"
+        >
         </canvas>
       </div>
 
       <!-- Gráfica Radar: Tendencia por Mes -->
       <div class="bg-white rounded-2xl shadow-xl p-6">
-        <h3 class="text-xl font-bold text-gray-800 mb-4">
-          Tendencia por Mes
-        </h3>
-        <canvas baseChart
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Tendencia por Mes</h3>
+        <canvas
+          baseChart
           [data]="radarChartData"
           [options]="radarChartOptions"
-          [type]="'radar'">
+          [type]="'radar'"
+        >
         </canvas>
       </div>
     </div>
