@@ -92,28 +92,19 @@ def history():
             )
 
         if data is not None:
-            rates = data["rates"]
+            dollarToday = data["current"]
 
-            if len(rates) < 2:
-                return {
-                    "message": "No hay suficientes datos en la respuesta",
-                    "status": "error",
-                    "error": f"Solo se encontraron {len(rates)} registros, se necesitan al menos 2",
-                }
+            yesterday = data["previous"]
 
-            today = rates[0]
-            yesterday = rates[1]
-            dollar = today["dollar"]
-
-            date_value = today["date"]
+            date_value = dollarToday["date"]
             if isinstance(date_value, str):
                 date_obj = datetime.strptime(date_value, "%Y-%m-%d")
             else:
                 date_obj = date_value
             date = date_obj.strftime("%d/%m/%Y")
-            variation = _get_variation(today["dollar"], yesterday["dollar"])
+            variation = _get_variation(dollarToday["usd"], yesterday["usd"])
             data_to_insert = {
-                "dollar": dollar,
+                "dollar": dollarToday["usd"],
                 "date": date,
                 "variation": variation,
             }
