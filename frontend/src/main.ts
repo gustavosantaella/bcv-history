@@ -5,14 +5,24 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import './app/chart-config'; // Registrar Chart.js
+import { inject } from '@vercel/analytics';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 
+import './app/chart-config'; // Registrar Chart.js
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 bootstrapApplication(AppComponent, {
   providers: [
+    {
+      provide: 'Analytics',
+      useValue: inject(),
+    },
+    {
+      provide: 'SpeedInsights',
+      useValue: injectSpeedInsights(),
+    },
     provideHttpClient(),
     provideAnimationsAsync(),
     TranslateModule.forRoot({
