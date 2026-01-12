@@ -22,7 +22,7 @@
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/ads.txt"],
+            "assets": ["src/favicon.ico", "src/assets", "src/ads.txt", "src/manifest.webmanifest"],
             "styles": ["src/styles.css"],
             "scripts": []
           },
@@ -46,7 +46,8 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.production.ts"
                 }
-              ]
+              ],
+              "serviceWorker": "ngsw-config.json"
             },
             "development": {
               "optimization": false,

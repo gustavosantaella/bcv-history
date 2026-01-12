@@ -7,6 +7,8 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { inject } from '@vercel/analytics';
 import { injectSpeedInsights } from '@vercel/speed-insights';
+import { provideServiceWorker } from '@angular/service-worker';
+import { isDevMode } from '@angular/core';
 
 import './app/chart-config'; // Registrar Chart.js
 export function HttpLoaderFactory(http: HttpClient) {
@@ -33,5 +35,9 @@ bootstrapApplication(AppComponent, {
         deps: [HttpClient],
       },
     }).providers || [],
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 }).catch((err) => console.error(err));
